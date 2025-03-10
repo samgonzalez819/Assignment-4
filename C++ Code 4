@@ -1,0 +1,91 @@
+// Assigment 4: Data Structures
+// Name: Samantha Gonzalez
+// Date: 03/10/2025
+#include <iostream>
+using namespace std;
+
+//Initiate Class Node to represent an element in the rotation
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int value) : data(value), next(nullptr) {}
+};
+
+class CircularQueue {
+private:
+    Node* rear;
+
+public:
+    CircularQueue() : rear(nullptr) {}
+
+    bool isEmpty() {
+        return rear == nullptr;
+    }
+
+    void enqueue(int value) {
+        Node* newNode = new Node(value);
+        if (isEmpty()) {
+            rear = newNode;
+            rear->next = rear;  //Initiates Circular Rotation element
+        } else {
+            newNode->next = rear->next;
+            rear->next = newNode;
+            rear = newNode;
+        }
+    }
+    //function to remove the last element 
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is empty. Cannot dequeue." << endl;
+            return;
+        }
+
+        if (rear->next == rear) {  // Only one element in the queue
+            delete rear;
+            rear = nullptr;
+        } else {
+            Node* front = rear->next;
+            rear->next = front->next;
+            delete front;
+        }
+    }
+
+    void getFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty." << endl;
+        } else {
+            cout << "Front element: " << rear->next->data << endl;
+        }
+    }
+    //represents rotation functionality
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty." << endl;
+            return;
+        }
+        Node* current = rear->next;
+        do {
+            cout << current->data << " -> ";
+            current = current->next;
+        } while (current != rear->next);
+        cout << "(Back to front)" << endl;
+    }
+};
+//Output Display
+int main() {
+    CircularQueue queue;
+
+    queue.enqueue(5);
+    queue.enqueue(10);
+    queue.enqueue(15);
+    queue.getFront();   // Front element: 5
+    queue.display();    // 5 -> 10 -> 15 -> (Back to front)
+
+    queue.dequeue();
+    queue.getFront();   // Front element: 10
+    queue.display();    // 10 -> 15 -> (Back to front)
+
+    return 0;
+}
