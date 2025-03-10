@@ -10,7 +10,7 @@ public:
     int data;
     Node* next;
 
-    Node(int value) : data(value), next(nullptr) {}
+    explicit Node(const int value) : data(value), next(nullptr) {}
 };
 
 class CircularQueue {
@@ -20,12 +20,10 @@ private:
 public:
     CircularQueue() : rear(nullptr) {}
 
-    bool isEmpty() {
-        return rear == nullptr;
-    }
+    [[nodiscard]] bool isEmpty() const;
 
-    void enqueue(int value) {
-        Node* newNode = new Node(value);
+    void enqueue(const int value) {
+        const auto newNode = new Node(value);
         if (isEmpty()) {
             rear = newNode;
             rear->next = rear;  //Initiates Circular Rotation element
@@ -35,7 +33,7 @@ public:
             rear = newNode;
         }
     }
-    //function to remove the last element 
+    //function to remove the last element
     void dequeue() {
         if (isEmpty()) {
             cout << "Queue is empty. Cannot dequeue." << endl;
@@ -46,13 +44,14 @@ public:
             delete rear;
             rear = nullptr;
         } else {
-            Node* front = rear->next;
+            const Node* front = rear->next;
             rear->next = front->next;
             delete front;
         }
     }
 
-    void getFront() {
+    void getFront() const
+    {
         if (isEmpty()) {
             cout << "Queue is empty." << endl;
         } else {
@@ -60,7 +59,8 @@ public:
         }
     }
     //represents rotation functionality
-    void display() {
+    void display() const
+    {
         if (isEmpty()) {
             cout << "Queue is empty." << endl;
             return;
@@ -73,6 +73,12 @@ public:
         cout << "(Back to front)" << endl;
     }
 };
+
+bool CircularQueue::isEmpty() const
+{
+    return rear == nullptr;
+}
+
 //Output Display
 int main() {
     CircularQueue queue;
@@ -88,4 +94,3 @@ int main() {
     queue.display();    // 10 -> 15 -> (Back to front)
 
     return 0;
-}
